@@ -3,7 +3,7 @@
 
 using namespace Btools;
 
-void Btools::GetDateTime(char * szDate, char * szTime, const char * szDateDelim, const char * szTimeDelim)
+void Btools::GetNow(char * szDate, char * szTime, constsz szDateDelim)
 {
   time_t      tick;
   struct tm   tms;
@@ -11,20 +11,15 @@ void Btools::GetDateTime(char * szDate, char * szTime, const char * szDateDelim,
   localtime_r(&tick, &tms);
 
   if (szDate) sprintf(szDate, "%04d%s%02d%s%02d", tms.tm_year+1900, szDateDelim, tms.tm_mon+1, szDateDelim, tms.tm_mday);
-  if (szTime) sprintf(szTime, "%02d%s%02d%s%02d", tms.tm_hour, szTimeDelim, tms.tm_min, szTimeDelim, tms.tm_sec);
+  if (szTime) sprintf(szTime, "%02d:%02d:%02d", tms.tm_hour, tms.tm_min, tms.tm_sec);
 }
 
-string Btools::GetToday(constsz szDateDelim)
+string Btools::GetNow(constsz szDateDelim)
 {
   char szBuffer[BTOOLS_BUFFER_SIZE];
-  GetDateTime( szBuffer, NULL, szDateDelim);
-  return szBuffer;
-}
-
-string Btools::GetNow()
-{
-  char szBuffer[BTOOLS_BUFFER_SIZE];
-  GetDateTime( szBuffer, szBuffer +11, "/", ":");
+  int offset = 8 + 2*strlen(szDateDelim);
+  GetNow( szBuffer, szBuffer +offset + 1, szDateDelim);
+  szBuffer[offset] = ' ';
   return szBuffer;
 }
 

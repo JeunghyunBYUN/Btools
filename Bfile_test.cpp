@@ -32,16 +32,16 @@ TEST(Bfile_test, LoadConfig_val)
 	string strBuffer;
 
 	ASSERT_TRUE(LoadText(CONF_FILE, strBuffer));
-	StrMap mConfig1;
+	map<string, string> mConfig1;
 	EXPECT_GT( LoadConfig(mConfig1, strBuffer), 0);
 
 	ASSERT_TRUE(LoadText(TSV_FILE, strBuffer));
-	StrMap mConfig2;
+	map<string, string> mConfig2;
 	EXPECT_GT( LoadConfig(mConfig2, strBuffer, "\t"), 0);
 
 	EXPECT_EQ( mConfig1.size(), mConfig2.size());
 
-	for(StrMap::iterator it=mConfig1.begin(); it!=mConfig1.end();++it)
+	for(map<string, string>::iterator it=mConfig1.begin(); it!=mConfig1.end();++it)
 	{
 		EXPECT_TRUE( mConfig2.find(it->first) != mConfig2.end());
 		EXPECT_TRUE( it->second == mConfig2[it->first]);

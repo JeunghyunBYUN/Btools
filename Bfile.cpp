@@ -21,7 +21,7 @@ bool Btools::GetLine(string & strLine, FILE * f)
 	return true;
 }
 
-size_t Btools::LoadConfig( StrMap & mFieldValue, string & strBuffer, constsz szDelim, constsz szComment)
+size_t Btools::LoadConfig( map<string, string> & mFieldValue, string & strBuffer, constsz szDelim, constsz szComment)
 {
 	mFieldValue.clear();
 

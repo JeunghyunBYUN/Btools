@@ -23,7 +23,6 @@ using namespace std;
 typedef unsigned long       ulong;
 typedef unsigned int        uint;
 typedef const char *		constsz;
-typedef map<string, string> StrMap;
 
 #define BTOOLS_BUFFER_SIZE 10240
 
@@ -55,42 +54,42 @@ namespace Btools
 	inline bool    SaveText( string fileName, string & strBuffer)
 	{ return SaveFile(fileName, (const void *)strBuffer.c_str(), strBuffer.size()); }
 	bool    LoadText( string fileName, string & strBuffer);
-	size_t	LoadConfig( StrMap & mConfig, string & strBuffer, constsz szDelim = "=", constsz szComment = "#");
+	size_t	LoadConfig( map<string, string> & mConfig, string & strBuffer, constsz szDelim = "=", constsz szComment = "#");
 	bool    GetLine(string & output, FILE * f);	// Chomp '\n'
 
 	class	BstringTable
 	{
-	public:
-        BstringTable() : m_strPool("") {}
+		public:
+			BstringTable() : m_strPool("") {}
 
-        // ex> "abc/def" for "abc/def.index" and "abc/def.string"
-        void	Clear() { m_vOffset.clear(); m_strPool.clear(); }
-		bool	Load(const string& strTablePath); 
-		void	Append(string strItem);
+			// ex> "abc/def" for "abc/def.index" and "abc/def.string"
+			void	Clear() { m_vOffset.clear(); m_strPool.clear(); }
+			bool	Load(const string& strTablePath); 
+			void	Append(string strItem);
 
-        template<class InputIterator >
-		void	Append( InputIterator beginIter, InputIterator endIter)
-        { while (beginIter != endIter) Append(*(beginIter++)); }
+			template<class InputIterator >
+			void	Append( InputIterator beginIter, InputIterator endIter)
+			{ while (beginIter != endIter) Append(*(beginIter++)); }
 
-		bool	Save(const string& strTablePath);
-		bool	Build(const vector<string>& vStringList, const string& strPath)
-        { Clear(); Append( vStringList.begin(), vStringList.end() ); return Save(strPath); }
+			bool	Save(const string& strTablePath);
+			bool	Build(const vector<string>& vStringList, const string& strPath)
+			{ Clear(); Append( vStringList.begin(), vStringList.end() ); return Save(strPath); }
 
-		void	Print(FILE * f = stderr);
+			void	Print(FILE * f = stderr);
 
-		size_t	Size()               const { return m_vOffset.size(); }
-		constsz	operator[](size_t i) const { return At(i); }
-		constsz	At(size_t i)     const { return (i<m_vOffset.size()) ? &m_strPool[0] +m_vOffset[i] : NULL; }
+			size_t	Size()               const { return m_vOffset.size(); }
+			constsz	operator[](size_t i) const { return At(i); }
+			constsz	At(size_t i)     const { return (i<m_vOffset.size()) ? &m_strPool[0] +m_vOffset[i] : NULL; }
 
-	protected:
-		vector<size_t>  m_vOffset;
-		string          m_strPool;
+		protected:
+			vector<size_t>  m_vOffset;
+			string          m_strPool;
 	};
 
 
-/**
- * Bstring.cpp
- */
+	/**
+	 * Bstring.cpp
+	 */
 	string    Int2String(int num);
 	string    GetStringf(constsz szFormat, ... );
 
@@ -102,24 +101,26 @@ namespace Btools
 	 * Tokenize
 	 * @param strInput: input string
 	 * @param szDelim: a STRING Delimiter
-	 * @param vTokens: output string vector ( A token string CANNOT be empty string. )
+	 * @param vTokens: output string vector
 	 * @param bClear: If true, clear vTokens at start 
+	 * @remark Empty token: DISCARD!!!
 	 * @return nothing
 	 */
-    void Tokenize( const string& strInput, constsz szDelim, vector<string>& vToken, bool bClear =true );
+	void Tokenize( const string& strInput, constsz szDelim, vector<string>& vToken, bool bClear =true );
 
 	/**
 	 * Split 
 	 * @param strInput: input string
 	 * @param szDelim: a STRING Delimiter
-	 * @param vPiece: output string vector ( A piece string CAN be empty string. )
+	 * @param vPiece: output string vector
 	 * @param bClear: If true, clear vTokens at start 
+	 * @remark Empty token: KEEP!!!
 	 * @return nothing
 	 */
-    void Split( const string & strInput, constsz szDelim, vector<string> & vPiece, bool bClear =true );
-    
-    string & Join( vector<string> & vPiece, constsz szDelim, string & strOutput );
-    size_t Replace( string & strTarget, string strFrom, string strTo );
+	void Split( const string & strInput, constsz szDelim, vector<string> & vPiece, bool bClear =true );
+
+	string & Join( vector<string> & vPiece, constsz szDelim, string & strOutput );
+	size_t Replace( string & strTarget, string strFrom, string strTo );
 
 
 	/**
@@ -144,50 +145,50 @@ namespace Btools
 	inline	bool    GetLine( string & strLine, constsz & szBuffer ) { return GetFirst( strLine, szBuffer, "\n"); }
 	inline	char *	GetLine( char *& szBuffer ) { return strsep( &szBuffer, "\n"); }
 
-/**
- * Btime.cpp
- */
-	void    GetDateTime(char * szDate, char * szTime, constsz szDateDelim ="", constsz szTimeDelim ="");
-	string  GetToday(constsz szDateDelim ="");
-	string  GetNow();
+	/**
+	 * Btime.cpp
+	 */
+	void    GetNow(char * szDate, char * szTime, constsz szDateDelim ="/");
+	string  GetNow(constsz szDateDelim ="/");
 
 	class BstopWatch
 	{
-	public:
-		BstopWatch()  { Reset(); Start(); }
-		void    Start();
-		void    Stop();
-		void    Reset();
-        void    Restart() { Reset(); Start(); }
-		string  GetTime() const;
-		void    Print(FILE* f = stderr) const
-		{
-			fprintf(f, "  ==> Elapsed time : %s\n\n", GetTime().c_str() );
-			fflush(f);
-		}
+		public:
+			BstopWatch()  { Reset(); Start(); }
+			void    Start();
+			void    Stop();
+			void    Reset();
+			void    Restart() { Reset(); Start(); }
+			string  GetTime() const;
+			void    Print(FILE* f = stderr) const
+			{
+				fprintf(f, "  ==> Elapsed time : %s\n\n", GetTime().c_str() );
+				fflush(f);
+			}
 
-		float   Second() const;
-		float   Millisecond() const;
-		ulong   Microsecond() const;
+			float   Second() const;
+			float   Millisecond() const;
+			ulong   Microsecond() const;
 
-	private:
-		bool    m_bRunning;
-		timeval m_tvStart;
-		ulong   m_accTime;
+		private:
+			bool    m_bRunning;
+			timeval m_tvStart;
+			ulong   m_accTime;
 	};
 
 
-/**
- * Bcounter.cpp
- */
+	/**
+	 * Bcounter.cpp
+	 */
 	class Bcounter
 	{
 		public:
-			/* nTermBit
-				0: print everytime, 
-				1: print every other time(2^1),
-				2: print every 4(2^2) time.
-			*/
+			/**
+			 * nTermBit
+			 * 0: print everytime, 
+			 * 1: print every other time(2^1),
+			 * 2: print every 4(2^2) time.
+			 */
 			Bcounter( uint nTermBit = 10 ):m_Total(0) { m_TermBit= (1<<nTermBit) -1; }
 
 			bool	IsToPrint() {  return !(m_Total & m_TermBit); }
@@ -207,8 +208,8 @@ namespace Btools
 		private:
 			string 	DumpCategory( map<string, ulong>::iterator it, bool bName, bool bTotal, bool bPercent);
 
-			int                 m_TermBit;
-			map<string, ulong > m_mCount;
+			int              	m_TermBit;
+			map<string, ulong>	m_mCount;
 			ulong               m_Total;
 	};
 }

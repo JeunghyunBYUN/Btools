@@ -25,15 +25,13 @@ void Bcounter_test(int n)
 
 int main(int argc, char * argv[])
 {
-	//  if(argc < 2)
-	//  {
-	//    cerr<<"Usage: "<<argv[0]<<" sample_text_file"<<endl;
-	//    return -1;
-	//  }
+	cout <<GetNow() <<endl;
+	cout <<GetNow("-") <<endl;
+	cout <<endl;
+
 	Bcounter_test(0);
 	Bcounter_test(1);
 	Bcounter_test(2);
-
 
 	return 0;
 }
