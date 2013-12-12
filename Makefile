@@ -2,7 +2,7 @@ CC = g++
 CFLAGS = -g -Wall -fPIC -pthread
 #CFLAGS = -O2 -Wall -fPIC -pthread
 #CFLAGS = -O3 -Wall -fPIC -pthread
-LDFLAGS = -fPIC
+LDFLAGS = -fPIC -pthread
 
 RM = rm -f
 CP = cp -f

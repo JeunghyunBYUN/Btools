@@ -72,10 +72,3 @@ TEST(Bfile_test, StringTable_val)
 		EXPECT_EQ(strLine, strTable[n++]);
 }
 
-
-int main(int argc, char **argv) 
-{
-	::testing::InitGoogleTest(&argc, argv);
-	return RUN_ALL_TESTS();
-}
-

@@ -9,6 +9,7 @@
 
 
 #include <stdio.h>
+#include <string.h>
 
 #include <iostream>
 #include <string>
@@ -138,27 +139,16 @@ namespace Btools
 	 * @return true on success and false at the end
 	 * @remarks input string NEVER changed
 	 */
-	bool    GetFirst( string & outStrPiece, constsz & inStr_outRest, constsz szDelim);
-	inline bool    GetLine( string & strLine, constsz & szBuffer ) { return GetFirst( strLine, szBuffer, "\n"); }
+	bool    GetFirst( string & outFirst, constsz & inStr_outRest, constsz szDelim);
 
-
-	/**
-	 * GetFirst - Fast Ver.
-	 * @param inStr_outRest: input string pointer and output rest string pointer
-	 * @param szDelim: a STRING delimiter
-	 * @return a first piece pointer or NULL(at the end)
-	 * @remarks fast but overwrite the delimiter with a null
-	 */
-	char *  GetFirst(char * & szBuffer, constsz szDelim);
-    inline bool    GetLine(char * & szLine, char * & szBuffer)
-    { szLine = GetFirst(szBuffer, "\n"); return szLine; }
-
+	inline	bool    GetLine( string & strLine, constsz & szBuffer ) { return GetFirst( strLine, szBuffer, "\n"); }
+	inline	char *	GetLine( char *& szBuffer ) { return strsep( &szBuffer, "\n"); }
 
 /**
  * Btime.cpp
  */
 	void    GetDateTime(char * szDate, char * szTime, constsz szDateDelim ="", constsz szTimeDelim ="");
-	string  GetToday(char * szDateDelim ="");
+	string  GetToday(constsz szDateDelim ="");
 	string  GetNow();
 
 	class BstopWatch
@@ -170,7 +160,7 @@ namespace Btools
 		void    Reset();
         void    Restart() { Reset(); Start(); }
 		string  GetTime() const;
-		void    Print(FILE* f) const
+		void    Print(FILE* f = stderr) const
 		{
 			fprintf(f, "  ==> Elapsed time : %s\n\n", GetTime().c_str() );
 			fflush(f);
@@ -190,39 +180,37 @@ namespace Btools
 /**
  * Bcounter.cpp
  */
-  class Bcounter
-  {
-    public:
-	  /* nTermBit
-                    0: print everytime, 
-                    1: print every other time(2^1),
-                    2: print every 4(2^2) time.
-	  */
-      Bcounter( uint nTermBit = 10 ):m_Total(0)
-      { m_TermBit= (1<<nTermBit) -1; }
-      bool IsToPrint() {  return !(m_Total & m_TermBit); }
-      ulong GetTotal() { return m_Total; }
-      ulong GetCat(string strCat) { return m_mCount[strCat]; }
+	class Bcounter
+	{
+		public:
+			/* nTermBit
+				0: print everytime, 
+				1: print every other time(2^1),
+				2: print every 4(2^2) time.
+			*/
+			Bcounter( uint nTermBit = 10 ):m_Total(0) { m_TermBit= (1<<nTermBit) -1; }
 
-      ulong Count( string strCategory = "" )
-      { ++m_Total; return ++m_mCount[strCategory]; }
+			bool	IsToPrint() {  return !(m_Total & m_TermBit); }
+			ulong	GetTotal() { return m_Total; }
+			ulong	GetCat(string strCat) { return m_mCount[strCat]; }
 
-      void PrintProc( FILE * fout = stderr )
-      { if(IsToPrint()) fprintf(fout, "Processing %lu\n", m_Total); }
-      void PrintProcK( FILE * fout = stderr )
-      { if(!(m_Total & 0x03ff)) fprintf(fout, "Processing %luk\n", m_Total>>10); }
+			ulong	Count( string strCategory = "" )
+			{ ++m_Total; return ++m_mCount[strCategory]; }
 
-      string DumpCategory( string strCategory, bool bName, bool bTotal, bool bPercent);
-      void PrintCategory( FILE * fout = stderr, bool bPercent = true);
-      void PrintAll( FILE * fout = stderr, bool bPercent = true);
+			void	PrintProc( FILE * fout = stderr ) { if(IsToPrint()) fprintf(fout, "Processing %lu\n", m_Total); }
+			void	PrintProcK( FILE * fout = stderr ) { if(!(m_Total & 0x03ff)) fprintf(fout, "Processing %luk\n", m_Total>>10); }
+			void	PrintCategory( FILE * fout = stderr, bool bPercent = true);
+			void	PrintAll( FILE * fout = stderr, bool bPercent = true);
+			string	DumpCategory( string strCategory, bool bName, bool bTotal, bool bPercent)
+			{ return DumpCategory( m_mCount.find(strCategory), bName, bTotal, bPercent); }
 
-    private:
-      void DumpCategory( string & strOutput, map<string, unsigned long>::iterator it, bool bName, bool bTotal, bool bPercent);
+		private:
+			string 	DumpCategory( map<string, ulong>::iterator it, bool bName, bool bTotal, bool bPercent);
 
-      int                 m_TermBit;
-      map<string, ulong > m_mCount;
-      ulong               m_Total;
-  };
+			int                 m_TermBit;
+			map<string, ulong > m_mCount;
+			ulong               m_Total;
+	};
 }
 
 #endif

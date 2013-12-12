@@ -125,5 +125,7 @@ void BstringTable::Print(FILE * f)
 {
 	fprintf(f, "Index\tOffset\tSize\tString\n");
 	for (size_t i = 0; i < m_vOffset.size(); ++i)
-		fprintf(f, "%lu\t%lu\t%lu\t%s\n", i, m_vOffset[i], strlen(At(i)), At(i));
+		fprintf(f, "%u\t%u\t%u\t%s\n", i, m_vOffset[i], strlen(At(i)), At(i));
 }
+
+

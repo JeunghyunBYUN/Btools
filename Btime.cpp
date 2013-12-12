@@ -14,7 +14,7 @@ void Btools::GetDateTime(char * szDate, char * szTime, const char * szDateDelim,
   if (szTime) sprintf(szTime, "%02d%s%02d%s%02d", tms.tm_hour, szTimeDelim, tms.tm_min, szTimeDelim, tms.tm_sec);
 }
 
-string Btools::GetToday(char * szDateDelim)
+string Btools::GetToday(constsz szDateDelim)
 {
   char szBuffer[BTOOLS_BUFFER_SIZE];
   GetDateTime( szBuffer, NULL, szDateDelim);

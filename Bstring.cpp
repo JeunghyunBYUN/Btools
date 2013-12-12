@@ -73,16 +73,10 @@ void Btools::Split( const string & str, constsz szDelim, vector<string> & vPiece
 {
 	if(bClear) vPiece.clear();
 
-	size_t nDelimSize = strlen(szDelim);
-	size_t sPos=0, ePos=str.find(szDelim, sPos);
-	while( ePos != string::npos )
-	{
-		vPiece.push_back(str.substr(sPos, ePos - sPos));
-		sPos = ePos + nDelimSize;
-		ePos = str.find(szDelim, sPos);
-	}
-
-	if( sPos < str.size() ) vPiece.push_back(str.substr(sPos));
+	string strFirst;
+	constsz pBuffer = str.c_str();
+	while(GetFirst(strFirst, pBuffer, szDelim))
+		vPiece.push_back(strFirst);
 }
 
 string & Btools::Join(vector<string> & vPiece, constsz szDelim, string & strOutput )
@@ -112,6 +106,7 @@ size_t Btools::Replace(string & strTarget, string strFrom, string strTo)
 	return nCount;
 }
 
+// Simple Version
 string Btools::GetFirst( string & strBuffer, constsz szDelim)
 {
 	string strReturn;
@@ -123,6 +118,7 @@ string Btools::GetFirst( string & strBuffer, constsz szDelim)
 	return strReturn;
 }
 
+// Costant Version
 bool Btools::GetFirst( string & strPiece, constsz & pBuffer, constsz szDelim)
 {
 	if( !pBuffer || !*pBuffer )
@@ -130,8 +126,8 @@ bool Btools::GetFirst( string & strPiece, constsz & pBuffer, constsz szDelim)
 		strPiece.clear();
 		return false;
 	}
-	constsz pDelim;
-    pDelim = strstr(pBuffer, szDelim);
+	static constsz pDelim;
+	pDelim = strstr(pBuffer, szDelim);
 	if(pDelim)
 	{
 //Bdbgf("%p %p\n", pBuffer, pDelim);		
@@ -144,24 +140,5 @@ bool Btools::GetFirst( string & strPiece, constsz & pBuffer, constsz szDelim)
 		pBuffer += strlen(pBuffer);
 	}
 	return true;
-}
-
-char * Btools::GetFirst(char * & pBuffer, constsz szDelim)
-{
-	if( !pBuffer || !*pBuffer ) return NULL;
-	static char * pHead;
-    pHead = pBuffer;
-	pBuffer = strstr(pHead, szDelim);
-	if(pBuffer)
-	{
-		*pBuffer= '\0';
-		pBuffer += strlen(szDelim);
-		return pHead;
-	}
-	else
-	{
-		pBuffer = pHead + strlen(pHead);
-		return pHead;
-	}
 }
 
