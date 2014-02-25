@@ -1,32 +1,31 @@
-[Btools](http://ddolgi.github.io/Btools) - Additional C++ functions: string, file, time, count
+[Btools](http://ddolgi.github.io/Btools) - Additional C++ Modules: file, string, table, time, counter
 ==================================================
 
 How to build Library
 ----------------------------
-
 ```bash
 git clone git://github.com/Btools
-make libBtools.a
+make
 ```
 
 ### Modules
 - Definitions for logging, debugging and etc.
-- **File**: Text Save/Load, Config file Load and String Table Class
+- **File**: Text Save/Load, Config file Load
 - **String**: Trimming, Tokenizing and etc.
+- **Table**: String Index Table Class
 - **Time**: GetNow() and StopWatch Class
 - **Counter**: Counter Class
 
 
 Running the Unit Tests
 --------------------------------------
+```bash
+make test
+```
 
 Depends on [Google Test](https://code.google.com/p/googletest/)
 
-```bash
-make
-```
 
 Questions?
 ----------
-
 If you have any questions, please feel free to ask on the ddolgi@gmail.com
